@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - E_M_Application</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body ng-app='EmployeeApp' ng-controller="EmployeeController" id="div12">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-page="/Employee/login" style="color: #115C9B; "><b>EMPLOYEE MANAGEMENT SYSTEM</b></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <b>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employee</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Home/Contact">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Home/Login">Log Out</a>
+                            </li>
+                        </ul>
+                    </b>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div ng-init="loadEmployee()">
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - EMPLOYEE MANAGEMENT SYSTEM - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/angular.js/angular.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        angular.module('EmployeeApp', []).
+            controller('EmployeeController', function ($scope, $http, $location, $window) {
+                $scope.employeeList = [];
+                $scope.message = '';
+                $scope.loadEmployee = function () {
+                    debugger;
+                    $http.get('https://localhost:44347/API/EmployeeAPI/GetEmployeeList')
+                        .then(function (response) {
+                            debugger;
+                            if (response.data.length > 0) {
+                                console.log(response);
+                                $scope.employeeList.push(response.data);
+                                console.log($scope.employeeList[0].firstname);
+                                //$location.path(data.redirectUrl);
+                                //$window.location.reload();
+                            }
+                            else {
+                                console.log('Form is submitted with:');
+                            }
+
+                        }, function (error) {
+                            console.log('Form is submitted with:');
+                        });
+                    
+                    ////$http service that send or receive data from the remote server
+                    //$http(
+                    //    {
+                    //        method: 'GET',
+                    //        url: 'https://localhost:44347/API/EmployeeAPI/GetEmployeeList',
+                    //    }).success(function (data, status, headers, config) {
+                    //        debugger;
+                    //        if (data.length > 0) {
+                    //            $scope.employeeList = employeeList;
+                    //            //$location.path(data.redirectUrl);
+                    //            //$window.location.reload();
+                    //        }
+                    //        else {
+                    //            console.log('Form is submitted with:');
+                    //        }
+                    //    }).error(function (data, status, headers, config) {
+                    //        console.log('Form is submitted with:');
+                    //    });
+                }
+            }).config(function ($locationProvider) {
+                //default = 'false'
+                $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: false
+                });
+            });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
